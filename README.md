@@ -1,2 +1,7 @@
-# md_google_map_attribute
-A Concrete CMS Package: Macareux Google Map Attribute
+# Macareux Google Map Attribute
+
+A Concrete CMS package to install a custom attribute type to set location to objects and display by Google Map.
+
+## License
+
+MIT License.

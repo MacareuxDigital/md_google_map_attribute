@@ -3,7 +3,6 @@
 namespace Macareux\Package\GoogleMapAttribute\Entity;
 
 use Concrete\Core\Entity\Attribute\Value\Value\AbstractValue;
-use Concrete\Core\Localization\Localization;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

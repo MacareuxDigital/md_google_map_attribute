@@ -4,6 +4,7 @@ namespace Concrete\Package\MdGoogleMapAttribute\Attribute\GoogleMap;
 
 use Concrete\Core\Attribute\Controller as AttributeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
+use Concrete\Core\Http\Client\Client;
 use Macareux\Package\GoogleMapAttribute\Entity\GoogleMapValue;
 
 class Controller extends AttributeController
@@ -24,7 +25,7 @@ class Controller extends AttributeController
 
     public function getIconFormatter()
     {
-        return new FontAwesomeIconFormatter('file');
+        return new FontAwesomeIconFormatter('map-marker-alt');
     }
 
     public function getAttributeValueClass()
@@ -75,25 +76,25 @@ class Controller extends AttributeController
         $longitude = $value->getLongitude() ?? '';
         $marker = $value->getMarker() ?? 0;
 
-        if($value->getLocation() !== "") {
-	        $config = $this -> app -> make ('config');
-	        $googleMapApiKey = $config -> get ('app.api_keys.google.maps');
-	        if ( $googleMapApiKey ) {
-		        $this -> addFooterItem (
-			        '<script async defer src="https://maps.googleapis.com/maps/api/js?callback=mdGoogleMapAttributeInit&key='
-			        . $googleMapApiKey
-			        . '"></script>'
-		        );
-	        }
-	
-	        return "<div class=\"googleMapAttributeCanvas\"
+        if ($value->getLocation() !== '') {
+            $config = $this->app->make('config');
+            $googleMapApiKey = $config->get('app.api_keys.google.maps');
+            if ($googleMapApiKey) {
+                $this->addFooterItem(
+                    '<script async defer src="https://maps.googleapis.com/maps/api/js?callback=mdGoogleMapAttributeInit&key='
+                    . $googleMapApiKey
+                    . '"></script>'
+                );
+            }
+
+            return "<div class=\"googleMapAttributeCanvas\"
 		         data-zoom=\"{$zoom}\"
 		         data-latitude=\"{$latitude}\"
 		         data-longitude=\"{$longitude}\"
 		         data-marker=\"{$marker}\"
 		         /></div>";
         }
-        
+
         return null;
     }
 
@@ -102,9 +103,19 @@ class Controller extends AttributeController
         $googleMapApiKey = $data['googleMapApiKey'];
 
         $e = $this->app->make('error');
-        
+
         if (empty($googleMapApiKey)) {
             $e->add(t('You must specify a API Key.'));
+        }
+
+        $api_url = 'https://maps.googleapis.com/maps/api/geocode/json?key=' . $googleMapApiKey . '&sensor=false&address=JP';
+        /** @var Client $client */
+        $client = $this->app->make('http/client');
+        $response = $client->get($api_url);
+        $data = json_decode($response->getBody());
+
+        if ($data->error_message) {
+            $e->add(t('The API Key is NOT valid.'));
         }
 
         return $e;

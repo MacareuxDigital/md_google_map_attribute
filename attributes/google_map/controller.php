@@ -115,7 +115,7 @@ class Controller extends AttributeController
         $data = json_decode($response->getBody());
 
         if ($data->error_message) {
-            $e->add(t('The API Key is NOT valid.'));
+            $e->add(t($data->error_message));
         }
 
         return $e;

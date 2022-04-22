@@ -107,8 +107,8 @@ class Controller extends AttributeController
         if (empty($googleMapApiKey)) {
             $e->add(t('You must specify a API Key.'));
         }
-
-        $api_url = 'https://maps.googleapis.com/maps/api/geocode/json?key=' . $googleMapApiKey . '&sensor=false&address=JP';
+	
+	    $api_url = 'https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=Museum%20of%20Contemporary%20Art%20Australia&inputtype=textquery&fields=formatted_address%2Cname%2Crating%2Copening_hours%2Cgeometry&key=' . $googleMapApiKey;
         /** @var Client $client */
         $client = $this->app->make('http/client');
         $response = $client->get($api_url);

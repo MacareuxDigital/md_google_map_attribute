@@ -50,7 +50,7 @@ class Controller extends AttributeController
             return false;
         }
 
-        if (trim((string) $v) == '') {
+        if (trim((string) $v->getLocation()) == '') {
             return false;
         }
 

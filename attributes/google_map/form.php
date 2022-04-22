@@ -100,14 +100,35 @@ $config = $app->make('config');
                             mapTypeControl: false
                         };
 
-                       const map = new google.maps.Map(document.getElementById("mdGoogleMapAttributeCanvas"), mapOptions);
+                        const map = new google.maps.Map(document.getElementById("mdGoogleMapAttributeCanvas"), mapOptions);
+                        var marker;
+                        marker = new google.maps.Marker({
+                            position: latlng,
+                            map: map
+                        });
 
-                        if($('input[name="<?=$this->field('marker')?>"]').prop('checked') == true){
-                            new google.maps.Marker({
-                                position: latlng,
+                        google.maps.event.addListener(map, "click", function(event) {
+                            marker.setMap(null);
+                            marker = new google.maps.Marker({
+                                position: event.latLng,
                                 map: map
                             });
-                        }
+
+                            $('#ccm-attribute-google-map > input[id="<?=$this->field('latitude')?>"]').val(event.latLng.lat());
+                            $('#ccm-attribute-google-map > input[id="<?=$this->field('longitude')?>"]').val(event.latLng.lng());
+
+                            var geocoder = new google.maps.Geocoder();
+                            geocoder.geocode({
+                                'latLng': event.latLng
+                            }, function(results, status) {
+                                if (status == google.maps.GeocoderStatus.OK) {
+                                    if (results[0]) {
+                                        $location.val(results[0].formatted_address);
+                                    }
+                                }
+                            });
+
+                        });
                         $location.removeClass('notfound');
                     }
                 });
@@ -214,6 +235,28 @@ $config = $app->make('config');
                 e.preventDefault();
             }
         });
-    
+
+        $('select[name="<?=$this->field('zoom')?>"]').on('change', function (e) {
+            const latitude = $('#ccm-attribute-google-map > input[id="<?=$this->field('latitude')?>"]').val();
+            const longitude = $('#ccm-attribute-google-map > input[id="<?=$this->field('longitude')?>"]').val();
+            if(latitude != "0" && longitude != "0"){
+                let latlng = new google.maps.LatLng(latitude, longitude);
+                let zoom = parseInt($(this).val());
+                
+                var mapOptions = {
+                    zoom: zoom,
+                    center: latlng,
+                    mapTypeControl: false
+                };
+                
+                const map = new google.maps.Map(document.getElementById("mdGoogleMapAttributeCanvas"), mapOptions);
+                
+                new google.maps.Marker({
+                    position: latlng,
+                    map: map
+                });
+            }
+        });
+        
     }());
 </script>

@@ -5,7 +5,9 @@ namespace Concrete\Package\MdGoogleMapAttribute\Attribute\GoogleMap;
 use Concrete\Core\Attribute\Controller as AttributeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Http\Client\Client;
+use GuzzleHttp\Exception\ClientException;
 use Macareux\Package\GoogleMapAttribute\Entity\GoogleMapValue;
+use Macareux\Package\GoogleMapAttribute\Utility\GoogleMapRendererInterface;
 
 class Controller extends AttributeController
 {
@@ -69,33 +71,29 @@ class Controller extends AttributeController
 
     public function getDisplayValue()
     {
-        $value = $this->getAttributeValue()->getValue();
-        $this->requireAsset('javascript', 'google_map_attribute');
-        $zoom = $value->getZoom() ?? '';
-        $latitude = $value->getLatitude() ?? '';
-        $longitude = $value->getLongitude() ?? '';
-        $marker = $value->getMarker() ?? 0;
-
-        if ($value->getLocation() !== '') {
-            $config = $this->app->make('config');
-            $googleMapApiKey = $config->get('app.api_keys.google.maps');
-            if ($googleMapApiKey) {
-                $this->addFooterItem(
-                    '<script async defer src="https://maps.googleapis.com/maps/api/js?callback=mdGoogleMapAttributeInit&key='
-                    . $googleMapApiKey
-                    . '"></script>'
-                );
-            }
-
-            return "<div class=\"googleMapAttributeCanvas\"
-		         data-zoom=\"{$zoom}\"
-		         data-latitude=\"{$latitude}\"
-		         data-longitude=\"{$longitude}\"
-		         data-marker=\"{$marker}\"
-		         /></div>";
+        $html = '';
+        $config = $this->app->make('config');
+        $googleMapApiKey = $config->get('app.api_keys.google.maps');
+        if ($googleMapApiKey) {
+            /** @var GoogleMapValue $value */
+            $value = $this->getAttributeValue()->getValue();
+            $latitude = $value->getLatitude() ?? 0;
+            $longitude = $value->getLongitude() ?? 0;
+            $zoom = $value->getZoom() ?? 14;
+            $location = $value->getLocation() ?? '';
+            $showMarker = $value->getMarker() ?? false;
+            $html = $this->app->make(GoogleMapRendererInterface::class, [
+                'attributeKey' => $this->getAttributeKey(),
+                'apiKey' => $googleMapApiKey,
+                'latitude' => $latitude,
+                'longitude' => $longitude,
+                'zoom' => $zoom,
+                'location' => $location,
+                'showMarker' => $showMarker,
+            ])->getOutput();
         }
 
-        return null;
+        return $html;
     }
 
     public function validateKey($data = false)
@@ -107,15 +105,24 @@ class Controller extends AttributeController
         if (empty($googleMapApiKey)) {
             $e->add(t('You must specify a API Key.'));
         }
-	
-	    $api_url = 'https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=Museum%20of%20Contemporary%20Art%20Australia&inputtype=textquery&fields=formatted_address%2Cname%2Crating%2Copening_hours%2Cgeometry&key=' . $googleMapApiKey;
+
+        $api_url = 'https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=Museum%20of%20Contemporary%20Art%20Australia&inputtype=textquery&fields=formatted_address%2Cname%2Crating%2Copening_hours%2Cgeometry&key=' . $googleMapApiKey;
         /** @var Client $client */
         $client = $this->app->make('http/client');
         $response = $client->get($api_url);
         $data = json_decode($response->getBody());
 
         if ($data->error_message) {
-            $e->add(t($data->error_message));
+            $e->add(t('Invalid API key for Places API. Response from API: %s', $data->error_message));
+        }
+
+        $static_api_url = 'https://maps.googleapis.com/maps/api/staticmap?center=40.714%2c%20-73.998&zoom=12&size=400x400&key=' . $googleMapApiKey;
+        /** @var Client $client */
+        $client = $this->app->make('http/client');
+        try {
+            $client->get($static_api_url);
+        } catch (ClientException $clientException) {
+            $e->add(t('Invalid API key for Static API. Response from API: %s', $clientException->getResponse()->getBody()));
         }
 
         return $e;

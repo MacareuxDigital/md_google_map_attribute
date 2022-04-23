@@ -17,17 +17,17 @@ class GoogleMapValue extends AbstractValue
      */
     protected $location;
 
-	/**
-	 * @var float
-	 * @ORM\Column(type="float", nullable=true)
-	 */
-	protected $latitude;
+    /**
+     * @var float
+     * @ORM\Column(type="float", nullable=true)
+     */
+    protected $latitude;
 
-	/**
-	 * @var float
-	 * @ORM\Column(type="float", nullable=true)
-	 */
-	protected $longitude;
+    /**
+     * @var float
+     * @ORM\Column(type="float", nullable=true)
+     */
+    protected $longitude;
 
     /**
      * @var int
@@ -35,11 +35,11 @@ class GoogleMapValue extends AbstractValue
      */
     protected $zoom;
 
-	/**
-	 * @var bool
-	 * @ORM\Column(type="boolean", nullable=true)
-	 */
-	protected $marker = false;
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    protected $marker = false;
 
     /**
      * @return string
@@ -57,37 +57,37 @@ class GoogleMapValue extends AbstractValue
         $this->location = $location;
     }
 
-	/**
-	 * @return float
-	 */
-	public function getLatitude()
-	{
-		return $this->latitude;
-	}
+    /**
+     * @return float
+     */
+    public function getLatitude()
+    {
+        return $this->latitude;
+    }
 
-	/**
-	 * @param float $latitude
-	 */
-	public function setLatitude($latitude)
-	{
-		$this->latitude = $latitude;
-	}
+    /**
+     * @param float $latitude
+     */
+    public function setLatitude($latitude)
+    {
+        $this->latitude = $latitude;
+    }
 
-	/**
-	 * @return float
-	 */
-	public function getLongitude()
-	{
-		return $this->longitude;
-	}
+    /**
+     * @return float
+     */
+    public function getLongitude()
+    {
+        return $this->longitude;
+    }
 
-	/**
-	 * @param float $longitude
-	 */
-	public function setLongitude($longitude)
-	{
-		$this->longitude = $longitude;
-	}
+    /**
+     * @param float $longitude
+     */
+    public function setLongitude($longitude)
+    {
+        $this->longitude = $longitude;
+    }
 
     /**
      * @return int
@@ -105,19 +105,19 @@ class GoogleMapValue extends AbstractValue
         $this->zoom = $zoom;
     }
 
-	/**
-	 * @return bool
-	 */
-	public function getMarker()
-	{
-		return $this->marker;
-	}
+    /**
+     * @return bool
+     */
+    public function getMarker()
+    {
+        return $this->marker;
+    }
 
-	/**
-	 * @param bool $marker
-	 */
-	public function setMarker($marker)
-	{
-		$this->marker = $marker;
-	}
+    /**
+     * @param bool $marker
+     */
+    public function setMarker($marker)
+    {
+        $this->marker = $marker;
+    }
 }

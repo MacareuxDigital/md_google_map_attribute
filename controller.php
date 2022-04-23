@@ -5,6 +5,8 @@ namespace Concrete\Package\MdGoogleMapAttribute;
 use Concrete\Core\Attribute\Category\CategoryService;
 use Concrete\Core\Attribute\TypeFactory;
 use Concrete\Core\Package\Package;
+use Macareux\Package\GoogleMapAttribute\Utility\GoogleMapRenderer;
+use Macareux\Package\GoogleMapAttribute\Utility\GoogleMapRendererInterface;
 
 class Controller extends Package
 {
@@ -46,13 +48,6 @@ class Controller extends Package
 
     public function on_start()
     {
-        $al = \Concrete\Core\Asset\AssetList::getInstance();
-        $al->register(
-            'javascript',
-            'google_map_attribute',
-            'js/google_map_attribute.js',
-            ['position' => \Concrete\Core\Asset\Asset::ASSET_POSITION_FOOTER],
-            'md_google_map_attribute'
-        );
+        $this->app->bind(GoogleMapRendererInterface::class, GoogleMapRenderer::class);
     }
 }

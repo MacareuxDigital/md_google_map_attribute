@@ -69,33 +69,6 @@ class Controller extends AttributeController
         ];
     }
 
-    public function getDisplayValue()
-    {
-        $html = '';
-        $config = $this->app->make('config');
-        $googleMapApiKey = $config->get('app.api_keys.google.maps');
-        if ($googleMapApiKey) {
-            /** @var GoogleMapValue $value */
-            $value = $this->getAttributeValue()->getValue();
-            $latitude = $value->getLatitude() ?? 0;
-            $longitude = $value->getLongitude() ?? 0;
-            $zoom = $value->getZoom() ?? 14;
-            $location = $value->getLocation() ?? '';
-            $showMarker = $value->getMarker() ?? false;
-            $html = $this->app->make(GoogleMapRendererInterface::class, [
-                'attributeKey' => $this->getAttributeKey(),
-                'apiKey' => $googleMapApiKey,
-                'latitude' => $latitude,
-                'longitude' => $longitude,
-                'zoom' => $zoom,
-                'location' => $location,
-                'showMarker' => $showMarker,
-            ])->getOutput();
-        }
-
-        return $html;
-    }
-
     public function validateKey($data = false)
     {
         $googleMapApiKey = $data['googleMapApiKey'];

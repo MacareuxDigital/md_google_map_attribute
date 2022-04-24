@@ -9,8 +9,6 @@ class GoogleMapRenderer implements GoogleMapRendererInterface
 {
     public const BASE_URL = 'https://maps.googleapis.com/maps/api/staticmap';
 
-    /** @var Key */
-    protected $attributeKey;
     /** @var string */
     protected $apiKey;
     /** @var float */
@@ -35,9 +33,8 @@ class GoogleMapRenderer implements GoogleMapRendererInterface
      * @param bool $showMarker
      * @param string $size
      */
-    public function __construct(Key $attributeKey, string $apiKey, float $latitude, float $longitude, int $zoom, string $location, bool $showMarker, string $size = '640x480')
+    public function __construct(string $apiKey, float $latitude, float $longitude, int $zoom, string $location, bool $showMarker, string $size = '640x480')
     {
-        $this->attributeKey = $attributeKey;
         $this->apiKey = $apiKey;
         $this->latitude = $latitude;
         $this->longitude = $longitude;

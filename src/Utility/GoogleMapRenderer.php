@@ -130,7 +130,7 @@ class GoogleMapRenderer implements GoogleMapRendererInterface
     /**
      * @return bool
      */
-    public function isShowMarker(): bool
+    public function shouldShowMarker(): bool
     {
         return $this->showMarker;
     }
@@ -162,17 +162,17 @@ class GoogleMapRenderer implements GoogleMapRendererInterface
     public function getOutput(): string
     {
         $options = [
-            'center' => $this->latitude . ',' . $this->longitude,
-            'zoom' => $this->zoom,
-            'size' => $this->size,
-            'key' => $this->apiKey,
+            'center' => $this->getLatitude() . ',' . $this->getLongitude(),
+            'zoom' => $this->getZoom(),
+            'size' => $this->getSize(),
+            'key' => $this->getApiKey(),
         ];
-        if ($this->showMarker) {
-            $options['markers'] = 'size:mid|' . $this->latitude . ',' . $this->longitude;
+        if ($this->shouldShowMarker()) {
+            $options['markers'] = 'size:mid|' . $this->getLatitude() . ',' . $this->getLongitude();
         }
         $url = Url::createFromUrl(self::BASE_URL);
         $url->setQuery($options);
 
-        return sprintf('<img src="%s" alt="%s" class="img-fluid">', $url, $this->location);
+        return sprintf('<img src="%s" alt="%s" class="img-fluid">', $url, $this->getLocation());
     }
 }

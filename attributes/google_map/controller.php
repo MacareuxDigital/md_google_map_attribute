@@ -7,7 +7,6 @@ use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Http\Client\Client;
 use GuzzleHttp\Exception\ClientException;
 use Macareux\Package\GoogleMapAttribute\Entity\GoogleMapValue;
-use Macareux\Package\GoogleMapAttribute\Utility\GoogleMapRendererInterface;
 
 class Controller extends AttributeController
 {
@@ -148,6 +147,17 @@ class Controller extends AttributeController
                 $this->set('marker', $value->getMarker());
             }
         }
+    }
+
+    public function searchKeywords($keywords, $queryBuilder)
+    {
+        if ($this->attributeKey) {
+            $result = $queryBuilder->expr()->like('ak_' . $this->attributeKey->getAttributeKeyHandle() . '_location', ':keywords');
+        } else {
+            $result = null;
+        }
+
+        return $result;
     }
 
     protected function load()

@@ -14,7 +14,7 @@ class Controller extends Package
 
     protected $appVersionRequired = '9.0.0';
 
-    protected $pkgVersion = '0.0.1';
+    protected $pkgVersion = '0.9.0';
 
     protected $pkgAutoloaderRegistries = [
         'src' => '\Macareux\Package\GoogleMapAttribute',
@@ -27,7 +27,7 @@ class Controller extends Package
 
     public function getPackageDescription()
     {
-        return t('Add a new attribute type for google map.');
+        return t('Add a new attribute type to set location to objects with google map interface.');
     }
 
     public function install()
@@ -41,8 +41,30 @@ class Controller extends Package
             $type = $factory->add('google_map', 'Google Map', $pkg);
             /** @var CategoryService $service */
             $service = $this->app->make(CategoryService::class);
-            $category = $service->getByHandle('collection')->getController();
-            $category->associateAttributeKeyType($type);
+            $collectionCategory = $service->getByHandle('collection');
+            if ($collectionCategory) {
+                $collectionCategory->getController()->associateAttributeKeyType($type);
+            }
+            $userCategory = $service->getByHandle('user');
+            if ($userCategory) {
+                $userCategory->getController()->associateAttributeKeyType($type);
+            }
+            $fileCategory = $service->getByHandle('file');
+            if ($fileCategory) {
+                $fileCategory->getController()->associateAttributeKeyType($type);
+            }
+            $siteCategory = $service->getByHandle('site');
+            if ($siteCategory) {
+                $siteCategory->getController()->associateAttributeKeyType($type);
+            }
+            $eventCategory = $service->getByHandle('event');
+            if ($eventCategory) {
+                $eventCategory->getController()->associateAttributeKeyType($type);
+            }
+            $expressCategory = $service->getByHandle('express');
+            if ($expressCategory) {
+                $expressCategory->getController()->associateAttributeKeyType($type);
+            }
         }
     }
 

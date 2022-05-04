@@ -2,26 +2,45 @@
 
 namespace Macareux\Package\GoogleMapAttribute\Utility;
 
-use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Url\Url;
 
 class GoogleMapRenderer implements GoogleMapRendererInterface
 {
     public const BASE_URL = 'https://maps.googleapis.com/maps/api/staticmap';
 
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $apiKey;
-    /** @var float */
+
+    /**
+     * @var float
+     */
     protected $latitude;
-    /** @var float */
+
+    /**
+     * @var float
+     */
     protected $longitude;
-    /** @var int */
+
+    /**
+     * @var int
+     */
     protected $zoom;
-    /** @var string */
+
+    /**
+     * @var string
+     */
     protected $location;
-    /** @var bool */
+
+    /**
+     * @var bool
+     */
     protected $showMarker;
-    /** @var string */
+
+    /**
+     * @var string
+     */
     protected $size;
 
     /**

@@ -43,6 +43,31 @@ class GoogleMapValue extends AbstractValue
      */
     protected $marker = false;
 
+    public function __toString()
+    {
+        $html = '';
+        $app = Application::getFacadeApplication();
+        $config = $app->make('config');
+        $googleMapApiKey = $config->get('app.api_keys.google.maps');
+        if ($googleMapApiKey) {
+            $latitude = $this->getLatitude() ?? 0;
+            $longitude = $this->getLongitude() ?? 0;
+            $zoom = $this->getZoom() ?? 14;
+            $location = $this->getLocation() ?? '';
+            $showMarker = $this->getMarker() ?? false;
+            $html = $app->make(GoogleMapRendererInterface::class, [
+                'apiKey' => $googleMapApiKey,
+                'latitude' => $latitude,
+                'longitude' => $longitude,
+                'zoom' => $zoom,
+                'location' => $location,
+                'showMarker' => $showMarker,
+            ])->getOutput();
+        }
+
+        return $html;
+    }
+
     /**
      * @return string
      */
@@ -121,30 +146,5 @@ class GoogleMapValue extends AbstractValue
     public function setMarker($marker)
     {
         $this->marker = $marker;
-    }
-
-    public function __toString()
-    {
-        $html = '';
-        $app = Application::getFacadeApplication();
-        $config = $app->make('config');
-        $googleMapApiKey = $config->get('app.api_keys.google.maps');
-        if ($googleMapApiKey) {
-            $latitude = $this->getLatitude() ?? 0;
-            $longitude = $this->getLongitude() ?? 0;
-            $zoom = $this->getZoom() ?? 14;
-            $location = $this->getLocation() ?? '';
-            $showMarker = $this->getMarker() ?? false;
-            $html = $app->make(GoogleMapRendererInterface::class, [
-                'apiKey' => $googleMapApiKey,
-                'latitude' => $latitude,
-                'longitude' => $longitude,
-                'zoom' => $zoom,
-                'location' => $location,
-                'showMarker' => $showMarker,
-            ])->getOutput();
-        }
-
-        return $html;
     }
 }

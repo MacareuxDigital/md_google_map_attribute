@@ -39,8 +39,8 @@ $config = $app->make('config');
             <?= $form->select($this->field('zoom'), $zoomArray, $zoom) ?>
         </div>
         <div class="form-group">
-            <?= $form->label('marker', t('Marker')) ?>
-            <?= $form->checkbox($this->field('marker'), 1, $marker ?? false)?>
+            <?= $form->label('marker', t('Show Marker')) ?>
+            <?= $form->checkbox($this->field('marker'), 1, $marker ?? true)?>
         </div>
     </div>
     <div class="col-md-6">

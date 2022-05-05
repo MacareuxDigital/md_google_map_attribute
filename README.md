@@ -48,6 +48,16 @@ $pages = $list->getResults();
 If you don't familiar with `PageList` class, please check the official documentation:
 [Searching and Sorting with the PageList object](https://documentation.concretecms.org/developers/pages-themes/working-with-pages/searching-and-sorting-with-the-pagelist-object)
 
+### Customize Static MAP
+
+You can customize Static MAP by overriding `Macareux\Package\GoogleMapAttribute\Utility\GoogleMapRenderer` class.
+
+```php
+use Macareux\Package\GoogleMapAttribute\Utility\GoogleMapRendererInterface;
+
+$app->bind(GoogleMapRendererInterface::class, 'CustomRendererClassName');
+```
+
 ## License
 
 MIT License.

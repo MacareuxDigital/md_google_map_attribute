@@ -299,11 +299,6 @@ class Controller extends AttributeController
 
     protected function load()
     {
-        $ak = $this->getAttributeKey();
-        if (!is_object($ak)) {
-            return false;
-        }
-
         $config = $this->app->make('config');
         $googleMapApiKey = $config->get('app.api_keys.google.maps');
         $this->set('googleMapApiKey', $googleMapApiKey);

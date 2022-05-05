@@ -27,7 +27,7 @@ class Controller extends Package
 
     public function getPackageDescription()
     {
-        return t('Add a new attribute type to set location to objects with google map interface.');
+        return t('Add a new attribute type to set location for objects with google map interface.');
     }
 
     public function install()

@@ -24,7 +24,7 @@ $config = $app->make('config');
 <div class="row">
     <div class="col-md-6">
         <div class="form-group" id="ccm-attribute-google-map">
-            <?= $form->label('location', t('Google Map')) ?>
+            <?= $form->label('location', t('Location')) ?>
             <?= $form->text($this->field('location'), $location, ['placeholder' => t('Enter a location')]) ?>
             <?= $form->hidden('apiKey', $config->get('app.api_keys.google.maps')) ?>
             <?= $form->hidden($this->field('latitude'), $latitude) ?>

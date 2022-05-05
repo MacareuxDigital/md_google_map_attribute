@@ -25,11 +25,11 @@ class Controller extends AttributeController
         ],
         'latitude' => [
             'type' => 'float',
-            'options' => ['default' => 0, 'notnull' => false],
+            'options' => ['default' => null, 'notnull' => false],
         ],
         'longitude' => [
             'type' => 'float',
-            'options' => ['default' => 0, 'notnull' => false],
+            'options' => ['default' => null, 'notnull' => false],
         ],
     ];
 

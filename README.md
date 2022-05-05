@@ -6,11 +6,11 @@ A Concrete CMS package to add a new attribute type to set location for objects w
 
 This package installs the "Google Map" attribute type.
 
-You can set a location to objects like pages, users, express entries.
+You can set a location to objects like pages, users, express entries, etc.
 Please add an attribute key for objects.
-You have to get a Google Cloud Platform API Key and enables Places API and Maps Static API for it.
+You have to get a Google Cloud Platform API Key that enables Places API and Maps Static API for it.
 
-You can show Google Static MAP by Page Attribute Display block by no coding.
+You can show Google Static MAP by Page Attribute Display block with no coding.
 
 ### Get coordinates by code
 
@@ -27,7 +27,7 @@ if ($value) {
     $location = $value->getLocation();
     $latitude = $value->getLatitude();
     $longitude = $value->getLongitude();
-    $zoom = $value->getLongitude();
+    $zoom = $value->getZoom();
     $showMarker = $value->getMarker();
 }
 ```
@@ -39,7 +39,7 @@ use Concrete\Core\Page\PageList;
 use Macareux\Package\GoogleMapAttribute\Utility\QueryApplier;
 
 $list = new PageList();
-$currentLatitude = 35.6681625
+$currentLatitude = 35.6681625;
 $currentLongitude = 139.6007834;
 QueryApplier::applySortByNearest($list, 'your_attribute_handle', $currentLatitude, $currentLongitude);
 $pages = $list->getResults();

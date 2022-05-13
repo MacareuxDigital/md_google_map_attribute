@@ -306,7 +306,7 @@ class Controller extends AttributeController
             $avn->addAttribute('latitude', $value->getLatitude());
             $avn->addAttribute('longitude', $value->getLongitude());
             $avn->addAttribute('zoom', $value->getZoom());
-            $avn->addAttribute('marker', $value->getMarker());
+	        $avn->addAttribute('marker', $value->getMarker() ? 1 : 0);
         }
     }
 
@@ -318,7 +318,7 @@ class Controller extends AttributeController
             $av->setLatitude((float) $akv->value['latitude']);
             $av->setLongitude((float) $akv->value['longitude']);
             $av->setZoom((int) $akv->value['zoom']);
-            $av->setMarker((bool) $akv->value['marker']);
+	        $av->setMarker(filter_var($akv->value['marker'], FILTER_VALIDATE_BOOLEAN));
 
             return $av;
         }

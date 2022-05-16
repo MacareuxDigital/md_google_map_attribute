@@ -5,6 +5,8 @@ namespace Concrete\Package\MdGoogleMapAttribute;
 use Concrete\Core\Attribute\Category\CategoryService;
 use Concrete\Core\Attribute\TypeFactory;
 use Concrete\Core\Package\Package;
+use Concrete\Core\Package\PackageService;
+use Macareux\Package\GoogleMapAttribute\MigrationTool\Import\CIF\Attribute\Value\GoogleMapImporter;
 use Macareux\Package\GoogleMapAttribute\Utility\GoogleMapRenderer;
 use Macareux\Package\GoogleMapAttribute\Utility\GoogleMapRendererInterface;
 
@@ -14,11 +16,25 @@ class Controller extends Package
 
     protected $appVersionRequired = '9.0.0';
 
-    protected $pkgVersion = '0.9.0';
+    protected $pkgVersion = '0.9.1';
 
     protected $pkgAutoloaderRegistries = [
-        'src' => '\Macareux\Package\GoogleMapAttribute',
+        'src/Entity' => '\Macareux\Package\GoogleMapAttribute\Entity',
+        'src/Utility' => '\Macareux\Package\GoogleMapAttribute\Utility',
     ];
+
+    /**
+     * @inheritDoc
+     */
+    public function getPackageAutoloaderRegistries()
+    {
+        $registries = parent::getPackageAutoloaderRegistries();
+        if ($this->isMigrationToolInstalled()) {
+            $registries['src/MigrationTool'] = '\Macareux\Package\GoogleMapAttribute\MigrationTool';
+        }
+
+        return $registries;
+    }
 
     public function getPackageName()
     {
@@ -71,5 +87,31 @@ class Controller extends Package
     public function on_start()
     {
         $this->app->bind(GoogleMapRendererInterface::class, GoogleMapRenderer::class);
+    }
+
+    public function on_after_packages_start()
+    {
+        if ($this->isMigrationToolInstalled()) {
+            $db = $this->app->make('database')->connection();
+            if (!$db->tableExists('MigrationImportAttributeGoogleMapValues')) {
+                $this->installEntitiesDatabase();
+            }
+            $manager = $this->app->make('migration/manager/import/attribute/value');
+            $manager->extend('google_map', function () {
+                return new GoogleMapImporter();
+            });
+        }
+    }
+
+    private function isMigrationToolInstalled(): bool
+    {
+        /** @var PackageService $packageService */
+        $packageService = $this->app->make(PackageService::class);
+        $migrationToolPackage = $packageService->getByHandle('migration_tool');
+        if ($migrationToolPackage && $migrationToolPackage->isPackageInstalled()) {
+            return true;
+        }
+
+        return false;
     }
 }

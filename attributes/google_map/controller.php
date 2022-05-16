@@ -297,6 +297,33 @@ class Controller extends AttributeController
         return true;
     }
 
+    public function exportValue(\SimpleXMLElement $akn)
+    {
+        $avn = $akn->addChild('value');
+        $value = $this->getAttributeValue()->getValue();
+        if ($value) {
+            $avn->addAttribute('location', $value->getLocation());
+            $avn->addAttribute('latitude', $value->getLatitude());
+            $avn->addAttribute('longitude', $value->getLongitude());
+            $avn->addAttribute('zoom', $value->getZoom());
+	        $avn->addAttribute('marker', $value->getMarker() ? 1 : 0);
+        }
+    }
+
+    public function importValue(\SimpleXMLElement $akv)
+    {
+        if (isset($akv->value)) {
+            $av = new GoogleMapValue();
+            $av->setLocation((string) $akv->value['location']);
+            $av->setLatitude((float) $akv->value['latitude']);
+            $av->setLongitude((float) $akv->value['longitude']);
+            $av->setZoom((int) $akv->value['zoom']);
+	        $av->setMarker(filter_var($akv->value['marker'], FILTER_VALIDATE_BOOLEAN));
+
+            return $av;
+        }
+    }
+
     protected function load()
     {
         $config = $this->app->make('config');

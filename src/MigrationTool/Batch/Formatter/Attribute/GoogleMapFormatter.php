@@ -9,18 +9,23 @@ class GoogleMapFormatter implements TreeContentItemFormatterInterface
 {
     protected $value;
 
+    public function __construct(GoogleMapValue $value)
+    {
+        $this->value = $value;
+    }
+
     public function getBatchTreeNodeJsonObject()
     {
         $node = new \stdClass();
         $node->title = $this->value->getAttribute()->getHandle();
         $node->icon = 'fas fa-map-marker-alt';
-        $node->children = array();
-        $labels = array();
-        $labels[] = array('field' => t('Location'), 'value' => $this->value->getLocation());
-        $labels[] = array('field' => t('Latitude'), 'value' => $this->value->getLatitude());
-        $labels[] = array('field' => t('Longitude'), 'value' => $this->value->getLongitude());
-        $labels[] = array('field' => t('Zoom'), 'value' => $this->value->getZoom());
-        $labels[] = array('field' => t('Marker'), 'value' => $this->value->getMarker());
+        $node->children = [];
+        $labels = [];
+        $labels[] = ['field' => t('Location'), 'value' => $this->value->getLocation()];
+        $labels[] = ['field' => t('Latitude'), 'value' => $this->value->getLatitude()];
+        $labels[] = ['field' => t('Longitude'), 'value' => $this->value->getLongitude()];
+        $labels[] = ['field' => t('Zoom'), 'value' => $this->value->getZoom()];
+        $labels[] = ['field' => t('Marker'), 'value' => $this->value->getMarker()];
         foreach ($labels as $label) {
             $child = new \stdClass();
             $child->title = $label['field'];
@@ -29,10 +34,5 @@ class GoogleMapFormatter implements TreeContentItemFormatterInterface
         }
 
         return $node;
-    }
-
-    public function __construct(GoogleMapValue $value)
-    {
-        $this->value = $value;
     }
 }

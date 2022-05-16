@@ -16,7 +16,7 @@ class Controller extends Package
 
     protected $appVersionRequired = '9.0.0';
 
-    protected $pkgVersion = '0.9.1';
+    protected $pkgVersion = '1.1';
 
     protected $pkgAutoloaderRegistries = [
         'src/Entity' => '\Macareux\Package\GoogleMapAttribute\Entity',
@@ -24,7 +24,7 @@ class Controller extends Package
     ];
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getPackageAutoloaderRegistries()
     {

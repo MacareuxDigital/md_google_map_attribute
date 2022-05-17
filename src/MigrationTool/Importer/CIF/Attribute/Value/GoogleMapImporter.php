@@ -14,7 +14,7 @@ class GoogleMapImporter extends AbstractImporter
         $value->setLatitude((string) $node->value['latitude']);
         $value->setLongitude((string) $node->value['longitude']);
         $value->setZoom((string) $node->value['zoom']);
-        $value->setMarker((bool) $node->value['marker']);
+	    $value->setMarker(filter_var($node->value['marker'], FILTER_VALIDATE_BOOLEAN));
 
         return $value;
     }
